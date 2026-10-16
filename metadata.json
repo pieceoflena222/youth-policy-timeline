@@ -1,0 +1,6 @@
+{
+  "name": "내 정책 타임라인",
+  "description": "대구 2030 청년을 위한 맞춤 청년정책 판정기 & 나이 타임라인",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

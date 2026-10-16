@@ -1,11 +1,94 @@
-<div align="center">
+# 내 정책 타임라인 (My Youth Policy Timeline)
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+> **대구에 사는 20~30대 취업준비생·사회초년생을 위한 맞춤 청년정책 판정기 & 나이 마감 시계**  
+> 나이·거주지·취업상태·학력·소득 5가지 조건을 입력하면 나에게 해당되는 청년정책을 실시간 선별 판정하고, 신청 마감 D-day와 함께 18~39세 나이 타임라인 위에 지원 연령 구간 막대로 배치하여 **"몇 살 전에 꼭 신청해야 하는지"**를 한눈에 보여줍니다.
 
-  <h1>Built with AI Studio</h2>
+---
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+## 📌 주요 기능
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+1. **5대 맞춤 조건 판정기 (Condition Matcher)**
+   - 나이(만 나이), 대구 관내 거주지(전체/수성구/달서구/중구/동구/서구/남구/북구/달성군/군위군/전국), 취업상태(취준생/재직자/창업가/단기근로), 학력, 소득 기준 실시간 적합도 계산
+   - 브라우저 `localStorage` 기반 자동 저장 (로그인 불필요)
+   - 원클릭 빠른 프리셋 및 자연어 조건 파서 제공
 
-</div>
+2. **맞춤 정책 카드 목록 & D-day 알림**
+   - 조건 일치 태그(나이, 거주지, 구직자격 등) 표시
+   - 마감 임박 정책 D-day 배지 (D-7 이내 긴급 붉은색 강조, 상시모집 구분)
+   - 캘린더 일정 파일(`.ics`) 원클릭 다운로드 기능
+
+3. **청년 나이 타임라인 뷰 (18~39세)**
+   - 가로축 나이 눈금 위에 현재 내 나이 세로 기준선 표시
+   - 각 정책의 지원 연령 구간을 직관적인 막대로 시각화
+   - 만 34세 등 연령 상한선에 도달하여 곧 자격이 만료되는 정책(1~2년 이내) 긴급 하이라이트
+
+4. **안정적인 3단계 온통청년 API 연동 & 폴백 보장**
+   - 신규 규격(Spec A) → 구 규격(Spec B) → 검증된 대구 샘플 데이터(Spec C) 순차 폴백
+   - API 연결 실패 시에도 화면 멈춤 없이 "샘플 데이터로 표시 중" 배너와 함께 즉시 탐색 가능
+
+---
+
+## 🚀 1. 로컬 개발 환경 실행
+
+```bash
+# 1. 의존성 패키지 설치
+npm install
+
+# 2. 로컬 환경변수 파일(.env.local) 확인
+# .env.local 파일에 온통청년 API 키가 저장되어 있는지 확인합니다.
+# YOUTH_API_KEY=발급받은_키값
+
+# 3. 개발 서버 실행 (포트 3000)
+npm run dev
+```
+
+브라우저에서 `http://localhost:3000`으로 접속하여 확인합니다.
+
+---
+
+## ☁️ 2. Vercel 배포 방법
+
+본 프로젝트는 Vercel Serverless Function(`/api/policies.ts`)과 Vite 프론트엔드가 원활하게 동작하도록 구성되어 있습니다.
+
+### ① Vercel에서 GitHub 저장소 Import
+1. [Vercel 대시보드](https://vercel.com)에 로그인합니다.
+2. **Add New...** > **Project**를 클릭합니다.
+3. 배포할 GitHub 저장소를 선택하고 **Import**를 누릅니다.
+
+### ② 환경변수 `YOUTH_API_KEY` 등록
+1. 프로젝트 설정 화면(Configure Project)의 **Environment Variables** 섹션으로 이동합니다.
+2. 다음 환경변수를 추가합니다:
+   - **Key**: `YOUTH_API_KEY`
+   - **Value**: 온통청년(youthcenter.go.kr)에서 발급받은 실제 인증키 입력
+   - **Environments**: Production, Preview, Development 모두 체크
+3. **Add** 버튼을 클릭하여 저장합니다.
+
+### ③ 배포 및 재배포 방법
+1. 설정 완료 후 **Deploy** 버튼을 클릭합니다.
+2. 추후 코드 변경 사항을 GitHub `main` 브랜치에 푸시하면 Vercel이 자동으로 감지하여 빌드 및 재배포합니다.
+3. 환경변수를 수정한 경우: Vercel 대시보드의 **Deployments** 탭에서 최신 배포 항목 우측의 메뉴(`...`)를 누르고 **Redeploy**를 선택합니다.
+
+---
+
+## 🔍 3. 샘플 배너가 사라지지 않을 때 점검 항목
+
+화면 상단에 `"샘플 데이터로 표시 중"` 배너가 계속 나타나는 경우 아래 항목들을 순서대로 점검하세요:
+
+1. **Vercel 환경변수명 확인**:
+   - 대소문자가 정확히 `YOUTH_API_KEY`인지 확인합니다 (앞뒤 공백 주의).
+2. **온통청년 API 키 발급 및 승인 상태**:
+   - [온통청년 오픈API 센터](https://www.youthcenter.go.kr)에서 발급 신청한 키의 상태가 **승인 완료(정상)** 상태인지 확인합니다.
+3. **API 일일 호출 한도 초과 여부**:
+   - 일일 호출 허용 트래픽을 초과한 경우 정부 서버에서 에러 응답(비정상 JSON 또는 차단)을 반환할 수 있습니다.
+4. **정부 서버 공공 방화벽 및 도메인 접속 허용**:
+   - Vercel 서버리스 함수의 해외 IP가 온통청년 서버 측 방화벽에 일시적으로 제한되는 경우가 있습니다. 이 경우에도 사용자 경험을 위해 자동으로 20건의 검증된 샘플 데이터로 안전하게 폴백되어 앱의 모든 판정/타임라인 기능이 정상 작동합니다.
+5. **환경변수 변경 후 Redeploy 여부**:
+   - 환경변수를 새로 등록하거나 수정한 뒤에는 반드시 기존 배포를 **Redeploy**해야 서버 함수에 적용됩니다.
+
+---
+
+## 🛠 기술 스택
+
+- **Frontend**: React 19, TypeScript, Tailwind CSS, Lucide React
+- **Backend / Serverless**: Express, Vercel Serverless Function (`/api/policies.ts`)
+- **Data Source**: 온통청년(youthcenter.go.kr) 오픈API & 대구광역시 청년정책
